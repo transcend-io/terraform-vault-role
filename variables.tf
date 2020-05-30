@@ -36,11 +36,11 @@ variable instance_profile_role {
 variable token_ttl {
   type = number
   description = "The incremental lifetime for generated tokens in number of seconds. Its current value will be referenced at renewal time."
-  default = 7200 # 20 hours
+  default = 72000 # 20 hours
 }
 
 variable token_max_ttl {
   type = number
   description = "The maximum lifetime for generated tokens in number of seconds. Its current value will be referenced at renewal time"
-  default = 7200 # 20 hours
+  default = 72000 # 20 hours
 }
