@@ -8,11 +8,6 @@ variable name {
   description = "Name of the role in Vault"
 }
 
-variable login_role_arns {
-  type        = list(string)
-  description = "The ARNs of IAM Roles that should be able to access variables in this vault cluster"
-}
-
 variable named_rules {
   description = "List of common rules that have standard policies"
   type        = list(string)
@@ -43,4 +38,26 @@ variable token_max_ttl {
   type        = number
   description = "The maximum lifetime for generated tokens in number of seconds. Its current value will be referenced at renewal time"
   default     = 72000 # 20 hours
+}
+
+variable wrapping_ttl {
+  type        = number
+  description = "If Approle is enabled, the number of seconds after this module is applied where you can unwrap the secret_id"
+  default     = 3600
+}
+
+#################
+# Login Methods #
+#################
+
+variable login_role_arns {
+  type        = list(string)
+  description = "The ARNs of IAM Roles that should be able to access variables in this vault cluster"
+  default     = []
+}
+
+variable enable_approle_login {
+  type        = bool
+  default     = false
+  description = "If true, an approle auth method will be enabled"
 }
