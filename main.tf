@@ -72,10 +72,7 @@ resource "vault_approle_auth_backend_role" "approle_role" {
 }
 
 resource "vault_approle_auth_backend_role_secret_id" "approle_secret" {
-  for_each = {
-    for key, approle_role in vault_approle_auth_backend_role.approle_role :
-    key => approle_role
-  }
+  for_each = vault_approle_auth_backend_role.approle_role
 
   backend      = each.value.backend
   role_name    = each.value.role_name
