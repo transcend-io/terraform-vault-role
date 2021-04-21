@@ -1,7 +1,7 @@
 output vault_role_name {
   value = try(
     { for name, resource in vault_aws_auth_backend_role.role: name => resource.role },
-    { for name, resource in vault_approle_auth_backend_role.role: name => resource.role_name },
+    { for name, resource in vault_approle_auth_backend_role.approle_role: name => resource.role_name },
     ""
   )
   description = "The name of the Vault Role created"
