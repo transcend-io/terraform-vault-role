@@ -61,3 +61,8 @@ variable "enable_approle_login" {
   default     = false
   description = "If true, an approle auth method will be enabled"
 }
+
+variable "region" {
+  type        = string
+  description = "Name of the AWS region"
+}

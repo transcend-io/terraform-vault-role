@@ -45,7 +45,7 @@ resource "vault_aws_auth_backend_role" "role" {
   for_each = length(var.login_role_arns) > 0 ? toset(var.backend_paths) : []
 
   backend                  = each.key
-  role                     = var.name
+  role                     = "${var.name}_${var.region}"
   auth_type                = "iam"
   bound_iam_principal_arns = var.login_role_arns
   resolve_aws_unique_ids   = false
@@ -63,7 +63,7 @@ resource "vault_approle_auth_backend_role" "approle_role" {
   for_each = var.enable_approle_login ? toset(var.backend_paths) : []
 
   backend        = each.key
-  role_name      = var.name
+  role_name      = "${var.name}_${var.region}"
   bind_secret_id = true
 
   token_policies = [vault_policy.policy.name]
@@ -75,7 +75,7 @@ resource "vault_approle_auth_backend_role_secret_id" "approle_secret" {
   for_each = vault_approle_auth_backend_role.approle_role
 
   backend      = each.value.backend
-  role_name    = each.value.role_name
+  role_name    = "${each.value.role_name}_${var.region}"
   wrapping_ttl = var.wrapping_ttl
 }
 
