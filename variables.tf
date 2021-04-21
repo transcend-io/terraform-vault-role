@@ -1,20 +1,20 @@
-variable backend_path {
-  type        = string
-  description = "Path to the aws backend"
+variable "backend_paths" {
+  type        = list(string)
+  description = "list of paths to the aws backend"
 }
 
-variable name {
+variable "name" {
   type        = string
   description = "Name of the role in Vault"
 }
 
-variable named_rules {
+variable "named_rules" {
   description = "List of common rules that have standard policies"
   type        = list(string)
   default     = []
 }
 
-variable rules {
+variable "rules" {
   type = list(object({
     path         = string
     capabilities = list(string)
@@ -23,24 +23,24 @@ variable rules {
   default = []
 }
 
-variable instance_profile_role {
+variable "instance_profile_role" {
   type        = string
   description = "The name of the Instance Profile Role assigned to the EC2 instances in the Vault cluster in AWS"
 }
 
-variable token_ttl {
+variable "token_ttl" {
   type        = number
   description = "The incremental lifetime for generated tokens in number of seconds. Its current value will be referenced at renewal time."
   default     = 72000 # 20 hours
 }
 
-variable token_max_ttl {
+variable "token_max_ttl" {
   type        = number
   description = "The maximum lifetime for generated tokens in number of seconds. Its current value will be referenced at renewal time"
   default     = 72000 # 20 hours
 }
 
-variable wrapping_ttl {
+variable "wrapping_ttl" {
   type        = number
   description = "If Approle is enabled, the number of seconds after this module is applied where you can unwrap the secret_id"
   default     = 3600
@@ -50,13 +50,13 @@ variable wrapping_ttl {
 # Login Methods #
 #################
 
-variable login_role_arns {
+variable "login_role_arns" {
   type        = list(string)
   description = "The ARNs of IAM Roles that should be able to access variables in this vault cluster"
   default     = []
 }
 
-variable enable_approle_login {
+variable "enable_approle_login" {
   type        = bool
   default     = false
   description = "If true, an approle auth method will be enabled"

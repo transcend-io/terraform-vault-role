@@ -41,10 +41,10 @@ locals {
 /**
  * Create a vault role that can be logged in to via an AWS IAM Role
  */
-resource vault_aws_auth_backend_role role {
-  count = length(var.login_role_arns) > 0 ? 1 : 0
+resource "vault_aws_auth_backend_role" "role" {
+  for_each = length(var.login_role_arns) > 0 ? toset(var.backend_paths) : []
 
-  backend                  = var.backend_path
+  backend                  = each.key
   role                     = var.name
   auth_type                = "iam"
   bound_iam_principal_arns = var.login_role_arns
@@ -59,10 +59,10 @@ resource vault_aws_auth_backend_role role {
 # Approle Logins #
 ##################
 
-resource vault_approle_auth_backend_role approle_role {
-  count = var.enable_approle_login ? 1 : 0
+resource "vault_approle_auth_backend_role" "approle_role" {
+  for_each = var.enable_approle_login ? toset(var.backend_paths) : []
 
-  backend        = var.backend_path
+  backend        = each.key
   role_name      = var.name
   bind_secret_id = true
 
@@ -71,11 +71,11 @@ resource vault_approle_auth_backend_role approle_role {
   token_max_ttl  = var.token_max_ttl
 }
 
-resource vault_approle_auth_backend_role_secret_id approle_secret {
-  count = var.enable_approle_login ? 1 : 0
+resource "vault_approle_auth_backend_role_secret_id" "approle_secret" {
+  for_each = vault_approle_auth_backend_role.approle_role
 
-  backend      = var.backend_path
-  role_name    = vault_approle_auth_backend_role.approle_role[0].role_name
+  backend      = each.value.backend
+  role_name    = each.value.role_name
   wrapping_ttl = var.wrapping_ttl
 }
 
@@ -86,8 +86,8 @@ resource vault_approle_auth_backend_role_secret_id approle_secret {
 /**
  * Create a policy document to determine what access this role has in Vault
  */
-data vault_policy_document policy_doc {
-  dynamic rule {
+data "vault_policy_document" "policy_doc" {
+  dynamic "rule" {
     for_each = concat(var.rules, local.generated_rules)
     content {
       path         = rule.value.path
@@ -100,7 +100,7 @@ data vault_policy_document policy_doc {
 /**
  * Create the Vault policy from the policy document
  */
-resource vault_policy policy {
+resource "vault_policy" "policy" {
   name   = "${var.name}-policy"
   policy = data.vault_policy_document.policy_doc.hcl
 }
@@ -113,7 +113,7 @@ resource vault_policy policy {
  * JSON doc specifying that Vault can query data about some IAM Roles
  * that are used to log in to this Vault Role.
  */
-data aws_iam_policy_document aws_get_role_doc {
+data "aws_iam_policy_document" "aws_get_role_doc" {
   count = length(var.login_role_arns) > 0 ? 1 : 0
 
   statement {
@@ -126,7 +126,7 @@ data aws_iam_policy_document aws_get_role_doc {
 /**
  * Creates an AWS IAM Policy from the above doc.
  */
-resource aws_iam_policy policy {
+resource "aws_iam_policy" "policy" {
   count = length(var.login_role_arns) > 0 ? 1 : 0
 
   name        = "${var.name}-policy"
@@ -137,7 +137,7 @@ resource aws_iam_policy policy {
 /**
  * Attaches the above policy to the Vault cluster instance profile role.
  */
-resource aws_iam_role_policy_attachment aws_attachment {
+resource "aws_iam_role_policy_attachment" "aws_attachment" {
   count = length(var.login_role_arns) > 0 ? 1 : 0
 
   role       = var.instance_profile_role
