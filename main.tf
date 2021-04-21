@@ -42,7 +42,7 @@ locals {
  * Create a vault role that can be logged in to via an AWS IAM Role
  */
 resource "vault_aws_auth_backend_role" "role" {
-  for_each = var.login_role_arns ? toset(var.backend_paths) : []
+  for_each = length(var.login_role_arns) > 0 ? toset(var.backend_paths) : []
 
   backend                  = each.key
   role                     = var.name
