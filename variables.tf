@@ -1,6 +1,6 @@
 variable "backend_paths" {
-  type        = list(string)
-  description = "list of paths to the aws backend"
+  type        = map(string)
+  description = "map with paths to the aws backend as the keys, and names of the roles to create as the value"
 }
 
 variable "name" {
