@@ -29,6 +29,7 @@ output approle_wrapping_token {
     { for name, resource in vault_approle_auth_backend_role_secret_id.approle_secret: name => resource.wrapping_token },
     {}
   )
+  sensitive   = true
   description = "The token used to retrieve a response-wrapped SecretID, keyed by the backend name."
 }
 
