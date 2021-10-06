@@ -23,11 +23,6 @@ variable "rules" {
   default = []
 }
 
-variable "instance_profile_role" {
-  type        = string
-  description = "The name of the Instance Profile Role assigned to the EC2 instances in the Vault cluster in AWS"
-}
-
 variable "token_ttl" {
   type        = number
   description = "The incremental lifetime for generated tokens in number of seconds. Its current value will be referenced at renewal time."
