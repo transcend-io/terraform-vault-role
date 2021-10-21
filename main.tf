@@ -95,16 +95,18 @@ data "vault_policy_document" "policy_doc" {
       description  = rule.value.description
 
       allowed_parameter {
-        for_each = rule.value.allowed_parameters
-        key = each.key
-        value = each.value
+        key = "*"
+        value = []
+        // for_each = rule.value.allowed_parameters
+        // key = each.key
+        // value = each.value
       }
 
-      denied_parameter {
-        for_each = rule.value.denied_parameters
-        key = each.key
-        value = each.value
-      }
+      // denied_parameter {
+      //   for_each = rule.value.denied_parameters
+      //   key = each.key
+      //   value = each.value
+      // }
     }
   }
 }
