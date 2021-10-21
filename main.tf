@@ -93,6 +93,22 @@ data "vault_policy_document" "policy_doc" {
       path         = rule.value.path
       capabilities = rule.value.capabilities
       description  = rule.value.description
+
+      dynamic "allowed_parameter" {
+        for_each = rule.value.allowed_parameters
+        content {
+          key   = allowed_parameter.key
+          value = allowed_parameter.value
+        }
+      }
+
+      dynamic "denied_parameter" {
+        for_each = rule.value.denied_parameters
+        content {
+          key   = denied_parameter.key
+          value = denied_parameter.value
+        }
+      }
     }
   }
 }
