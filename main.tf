@@ -93,6 +93,8 @@ data "vault_policy_document" "policy_doc" {
       path         = rule.value.path
       capabilities = rule.value.capabilities
       description  = rule.value.description
+      allowed_parameters = length(rule.value.allowed_parameters) > 0 ? rule.value.allowed_parameters : null
+      denied_parameters = length(rule.value.denied_parameters) > 0 ? rule.value.denied_parameters : null
     }
   }
 }
