@@ -19,8 +19,8 @@ variable "rules" {
     path         = string
     capabilities = list(string)
     description  = string
-    allowed_parameters = map(any)
-    denied_parameters = map(any)
+    allowed_parameters = map(list(string))
+    denied_parameters = map(list(string))
   }))
   default = []
 }
