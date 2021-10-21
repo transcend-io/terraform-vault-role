@@ -97,7 +97,7 @@ data "vault_policy_document" "policy_doc" {
       dynamic "allowed_parameter" {
         for_each = rule.value.allowed_parameters
         content {
-          key = allowed_parameter.key
+          key   = allowed_parameter.key
           value = allowed_parameter.value
         }
       }
@@ -105,24 +105,10 @@ data "vault_policy_document" "policy_doc" {
       dynamic "denied_parameter" {
         for_each = rule.value.denied_parameters
         content {
-          key = denied_parameter.key
+          key   = denied_parameter.key
           value = denied_parameter.value
         }
       }
-
-      // allowed_parameter {
-      //   // key = "*"
-      //   // value = []
-      //   for_each = rule.value.allowed_parameters
-      //   key = each.key
-      //   value = each.value
-      // }
-
-      // denied_parameter {
-      //   for_each = rule.value.denied_parameters
-      //   key = each.key
-      //   value = each.value
-      // }
     }
   }
 }
